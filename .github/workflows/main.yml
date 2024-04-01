@@ -3,13 +3,14 @@ name: Odoo Module Testing and Linting
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [main]
 
 jobs:
   test-and-lint:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
+      - name: Checkout code
       - uses: actions/checkout@v3
 
       # Test Module Structure
