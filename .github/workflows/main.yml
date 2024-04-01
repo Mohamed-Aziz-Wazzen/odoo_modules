@@ -9,17 +9,13 @@ on:
 jobs:
   test-and-lint:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # Test Module Structure
       - name: Test Module Structure
         run: bash testmodule.sh
-        if: ${{ failure() }}
 
-      # Linting with Ruff
       - name: Linting with Ruff
         run: python -m ruff check .
 
