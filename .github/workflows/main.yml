@@ -3,7 +3,7 @@ name: CI/CD Workflow
 on:
   push:
     branches:
-      - main  # Changer en fonction de votre branche principale
+      - main 
 
 jobs:
   build:
@@ -16,12 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -r requirements.txt
+        python-version: '3.10.12'
 
     - name: Run tests
       run: |
