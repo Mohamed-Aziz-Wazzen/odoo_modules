@@ -1,4 +1,4 @@
-name: CI/CD Workflow
+name: Odoo_module test
 
 on:
   push:
