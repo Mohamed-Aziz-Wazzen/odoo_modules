@@ -1,14 +1,10 @@
 #!/bin/bash
 
-MODULE_DIR="/home/azyz/Bureau/odoo_modules/wazzen_module"  # Chemin vers le répertoire de votre module
+# Chemin vers le répertoire du script
+SCRIPT_DIR="$(dirname "$0")"
+MODULE_DIR="$SCRIPT_DIR"  # Le répertoire du script est également le répertoire du module
 REQUIRED_FILES=("__manifest__.py" "__init__.py")
 REQUIRED_DIRS=("models" "views" "controllers" "security")
-
-# Vérification de l'existence du répertoire du module
-if [ ! -d "$MODULE_DIR" ]; then
-    echo "Erreur : Le répertoire du module n'existe pas : $MODULE_DIR"
-    exit 1
-fi
 
 # Vérification de l'existence des fichiers requis
 for file in "${REQUIRED_FILES[@]}"; do
@@ -27,4 +23,5 @@ for dir in "${REQUIRED_DIRS[@]}"; do
 done
 
 echo "La structure du module est conforme."
+
 
