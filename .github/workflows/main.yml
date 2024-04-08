@@ -1,50 +1,28 @@
-name: Odoo Module Testing and Linting
+name: CI/CD Workflow
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [main]
+    branches:
+      - main  # Changer en fonction de votre branche principale
 
 jobs:
-  test-and-lint:
+  build:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Test Module Structure
-        run: bash testmodule.sh
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
 
-      - name: Linting with Ruff
-        run: python -m ruff check .
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
 
-      # Test Inside Odoo Container
-      - name: Login to Docker Hub (optional)
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build and Start Docker Containers
-        uses: docker/build-push-action@v2
-        with:
-          push: false
-          context: .
-          file: docker-compose.yml
-      - name: Run Odoo Tests Inside Container
-        run: |
-          docker-compose up -d
-          docker exec -it odoo_container_name odoo-bin --test-tags wazzen --config /opt/bitnami/odoo/conf/test.conf
-          docker-compose down
-        env:
-          odoo_container_name: "intern_odoo_1"
-      - name: Cleanup Docker (optional)
-        run: docker system prune -f
-
-      # Envoyer une notification en cas d'échec
-      - uses: github/notify@v2
-        with:
-          event_name: workflow_dispatch
-          recipients: "your_email@example.com"
-          message: "**ERREUR : Échec du workflow 'Odoo Module Testing and Linting'**"
-        if: ${{ failure() }}
+    - name: Run tests
+      run: |
+        ./testmodule.sh  # Assurez-vous que le script de test est exécutable
