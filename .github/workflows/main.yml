@@ -21,3 +21,5 @@ jobs:
     - name: Run tests
       run: |
         ./testmodule.sh  # Assurez-vous que le script de test est exécutable
+    - name: Linting with Ruff
+      run: python -m ruff check .
