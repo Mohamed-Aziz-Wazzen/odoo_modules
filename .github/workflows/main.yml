@@ -3,7 +3,10 @@ name: CI/CD Workflow
 on:
   push:
     branches:
-      - main 
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -16,10 +19,17 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.10.12'
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install ruff  # Installation de ruff
 
     - name: Run tests
       run: |
         ./testmodule.sh  # Assurez-vous que le script de test est exécutable
-    - name: Linting with Ruff
-      run: python -m ruff check .
+
+    - name: Run ruff check
+      run: |
+        python -m ruff check .
+
