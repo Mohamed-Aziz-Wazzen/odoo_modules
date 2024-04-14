@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Chemin vers le répertoire du script
+# Chemin vers le répertoire du script 
 SCRIPT_DIR="$(dirname "$0")"
 MODULE_DIR="$SCRIPT_DIR"  # Le répertoire du script est également le répertoire du module
 REQUIRED_FILES=("__manifest__.py" "__init__.py")
