@@ -48,26 +48,25 @@ jobs:
       
       - name: Create odoo_image_test directory
         run: mkdir odoo_image_test
-      
 
       - name: Start Odoo test init container
         run: |
-          docker run -d --name odoo-test-init2 \
-            --env ODOO_TEST_TAGS=wazzen \
-            --env ODOO_DATABASE_ADMIN_PASSWORD=bitnami \
-            --env ODOO_DATABASE_NAME=bitnami_odoo \
-            --env ODOO_DATABASE_USER=bn_odoo \
-            --env ODOO_DATABASE_PASSWORD=bitnami \
-            --env ODOO_DATABASE_HOST=postgresql2 \
-            --env ODOO_DATABASE_PORT_NUMBER=5432 \
-            --network odoo_network_test \
-            --volume odoo_image_test:/bitnami/odoo \
-            ghcr.io/craftschoolship/odoo-test:16-sat
+         docker run -d --name odoo-test-init2 \
+         --env ODOO_TEST_TAGS=wazzen \
+         --env ODOO_DATABASE_ADMIN_PASSWORD=bitnami \
+         --env ODOO_DATABASE_NAME=bitnami_odoo \
+         --env ODOO_DATABASE_USER=bn_odoo \
+         --env ODOO_DATABASE_PASSWORD=bitnami \
+         --env ODOO_DATABASE_HOST=postgresql2 \
+         --env ODOO_DATABASE_PORT_NUMBER=5432 \
+         --network odoo_network_test \
+         --volume odoo_image_test:/bitnami/odoo \
+         ghcr.io/craftschoolship/odoo-test:16-sat
 
       - name: Copy module to Odoo addons folder
         run: |
-         cp -r . odoo_image_test/addons/wazzen_module
-        working-directory: odoo_image_test
+           mkdir -p odoo_image_test/addons  # Crée le répertoire addons s'il n'existe pas déjà
+           cp -r . odoo_image_test/addons/wazzen_module
 
 
       - name: Start Odoo test container
