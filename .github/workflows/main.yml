@@ -1,4 +1,4 @@
-name: Odoo_module test
+name: Odoo Module Test
 
 on:
   push:
@@ -13,23 +13,68 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
-    - name: Install dependencies
-      run: |
-        pip install ruff  # Installation de ruff
+      - name: Install dependencies
+        run: |
+          pip install ruff  # Installation de ruff
 
-    - name: test with bash script
-      run: |
-        ./testmodule.sh  # Assurez-vous que le script de test est exécutable
+      - name: Test with bash script
+        run: |
+          ./testmodule.sh  # Assurez-vous que le script de test est exécutable
 
-    - name: Run ruff check
-      run: |
-        python -m ruff check .
+      - name: Run ruff check
+        run: |
+          python -m ruff check .
+
+      - name: Start PostgreSQL container
+        run: |
+          docker run -d --name postgresql2 \
+            --env POSTGRESQL_USERNAME=bn_odoo \
+            --env POSTGRESQL_PASSWORD=bitnami \
+            --env POSTGRESQL_DATABASE=bitnami_odoo \
+            --network odoo_network_test \
+            bitnami/postgresql:16
+
+      - name: Start Odoo test init container
+        run: |
+          docker run -d --name odoo-test-init2 \
+            --env ODOO_TEST_TAGS=wazzen \
+            --env ODOO_DATABASE_ADMIN_PASSWORD=bitnami \
+            --env ODOO_DATABASE_NAME=bitnami_odoo \
+            --env ODOO_DATABASE_USER=bn_odoo \
+            --env ODOO_DATABASE_PASSWORD=bitnami \
+            --env ODOO_DATABASE_HOST=postgresql2 \
+            --env ODOO_DATABASE_PORT_NUMBER=5432 \
+            --network odoo_network_test \
+            --volume /home/azyz/Bureau/odoo_image_test:/bitnami/odoo \
+            ghcr.io/craftschoolship/odoo-test:16-sat
+
+      - name: Copy module to Odoo addons folder
+        run: |
+          cp -r ./wazzen_module /home/azyz/Bureau/odoo_image_test/addons/wazzen_module
+
+      - name: Start Odoo test container
+        run: |
+          docker run -d --name odoo-test2 \
+            --env ODOO_TEST_TAGS=wazzen \
+            --env ODOO_DATABASE_ADMIN_PASSWORD=bitnami \
+            --env ODOO_DATABASE_NAME=bitnami_odoo \
+            --env ODOO_DATABASE_USER=bn_odoo \
+            --env ODOO_DATABASE_PASSWORD=bitnami \
+            --env ODOO_DATABASE_HOST=postgresql2 \
+            --env ODOO_DATABASE_PORT_NUMBER=5432 \
+            --network odoo_network_test \
+            --volume /home/azyz/Bureau/odoo_image_test:/bitnami/odoo \
+            ghcr.io/craftschoolship/odoo-test:16-sat
+
+      - name: Show logs for Odoo test container
+        run: docker logs odoo-test2
+
 
