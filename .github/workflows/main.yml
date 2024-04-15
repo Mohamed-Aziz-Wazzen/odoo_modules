@@ -63,10 +63,7 @@ jobs:
          --volume /home/azyz/Bureau/odoo_image_test:/bitnami/odoo \
          ghcr.io/craftschoolship/odoo-test:16-sat
 
-      - name: Copy module to Odoo addons folder
-        run: |
-          cp -r wazzen_module /home/odoo/addons/wazzen_module
-        working-directory: /home/azyz/Bureau/odoo_image_test
+     
 
 
 
