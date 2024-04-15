@@ -33,13 +33,17 @@ jobs:
         run: |
           python -m ruff check .
 
+      # Ajout des étapes pour Docker
+      - name: Create Docker network
+        run: docker network create odoo_network_test
+
       - name: Start PostgreSQL container
         run: |
           docker run -d --name postgresql2 \
+            --network odoo_network_test \
             --env POSTGRESQL_USERNAME=bn_odoo \
             --env POSTGRESQL_PASSWORD=bitnami \
             --env POSTGRESQL_DATABASE=bitnami_odoo \
-            --network odoo_network_test \
             bitnami/postgresql:16
 
       - name: Start Odoo test init container
@@ -76,5 +80,6 @@ jobs:
 
       - name: Show logs for Odoo test container
         run: docker logs odoo-test2
+
 
 
