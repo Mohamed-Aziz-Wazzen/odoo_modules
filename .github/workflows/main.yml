@@ -60,13 +60,14 @@ jobs:
          --env ODOO_DATABASE_HOST=postgresql2 \
          --env ODOO_DATABASE_PORT_NUMBER=5432 \
          --network odoo_network_test \
-         --volume odoo_image_test:/bitnami/odoo \
+         --volume /home/azyz/Bureau/odoo_image_test:/bitnami/odoo \
          ghcr.io/craftschoolship/odoo-test:16-sat
 
       - name: Copy module to Odoo addons folder
         run: |
-           mkdir -p odoo_image_test/addons  # Crée le répertoire addons s'il n'existe pas déjà
-           cp -r . odoo_image_test/addons
+          cp -r wazzen_module /home/odoo/addons/wazzen_module
+        working-directory: /home/azyz/Bureau/odoo_image_test
+
 
 
       - name: Start Odoo test container
