@@ -45,6 +45,10 @@ jobs:
             --env POSTGRESQL_PASSWORD=bitnami \
             --env POSTGRESQL_DATABASE=bitnami_odoo \
             bitnami/postgresql:16
+      
+      - name: Create odoo_image_test directory
+        run: mkdir /home/azyz/Bureau/odoo_image_test
+      
 
       - name: Start Odoo test init container
         run: |
