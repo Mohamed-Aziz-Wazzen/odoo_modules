@@ -32,6 +32,31 @@ jobs:
       - name: Run ruff check
         run: |
           python -m ruff check .
+      - name: create docker network
+        run: |
+          docker network create odoo-test-network
+      - name: Create a PostgreSQL container from Bitnami
+        run: |
+          docker run -d --name odoo-test-postgresql \
+           --env POSTGRESQL_USERNAME=bn_odoo \
+           --env POSTGRESQL_PASSWORD=bitnami \
+           --env POSTGRESQL_DATABASE=bitnami_odoo \
+           --network odoo-test-network \
+           bitnami/postgresql:16   
+      - name: Create an Odoo Test container to run your tests
+        run: |
+          docker run -t --name odoo-test \
+            --env ODOO_DATABASE_ADMIN_PASSWORD=bitnami \
+            --env ODOO_DATABASE_NAME=bitnami_odoo \
+            --env ODOO_DATABASE_USER=bn_odoo \
+            --env ODOO_DATABASE_PASSWORD=bitnami \
+            --env ODOO_DATABASE_HOST=odoo-test-postgresql \
+            --env ODOO_DATABASE_PORT_NUMBER=5432 \
+            --network odoo-test-network \
+            --volume .:/bitnami/testing/addons \
+            ghcr.io/craftschoolship/odoo-test:16.1.2-sat
+    
+          
 
      
         
