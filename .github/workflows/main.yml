@@ -33,56 +33,5 @@ jobs:
         run: |
           python -m ruff check .
 
-      # Ajout des étapes pour Docker
-      - name: Create Docker network
-        run: docker network create odoo_network_test
-
-      - name: Start PostgreSQL container
-        run: |
-          docker run -d --name postgresql2 \
-            --network odoo_network_test \
-            --env POSTGRESQL_USERNAME=bn_odoo \
-            --env POSTGRESQL_PASSWORD=bitnami \
-            --env POSTGRESQL_DATABASE=bitnami_odoo \
-            bitnami/postgresql:16
-      
-      - name: Create odoo_image_test directory
-        run: mkdir odoo_image_test
-
-      - name: Start Odoo test init container
-        run: |
-         docker run -d --name odoo-test-init2 \
-         --env ODOO_TEST_TAGS=wazzen \
-         --env ODOO_DATABASE_ADMIN_PASSWORD=bitnami \
-         --env ODOO_DATABASE_NAME=bitnami_odoo \
-         --env ODOO_DATABASE_USER=bn_odoo \
-         --env ODOO_DATABASE_PASSWORD=bitnami \
-         --env ODOO_DATABASE_HOST=postgresql2 \
-         --env ODOO_DATABASE_PORT_NUMBER=5432 \
-         --network odoo_network_test \
-         --volume /home/azyz/Bureau/odoo_image_test:/bitnami/odoo \
-         ghcr.io/craftschoolship/odoo-test:16-sat
-
      
-
-
-
-      - name: Start Odoo test container
-        run: |
-          docker run -d --name odoo-test2 \
-            --env ODOO_TEST_TAGS=wazzen \
-            --env ODOO_DATABASE_ADMIN_PASSWORD=bitnami \
-            --env ODOO_DATABASE_NAME=bitnami_odoo \
-            --env ODOO_DATABASE_USER=bn_odoo \
-            --env ODOO_DATABASE_PASSWORD=bitnami \
-            --env ODOO_DATABASE_HOST=postgresql2 \
-            --env ODOO_DATABASE_PORT_NUMBER=5432 \
-            --network odoo_network_test \
-            --volume odoo_image_test:/bitnami/odoo \
-            ghcr.io/craftschoolship/odoo-test:16-sat
-
-      - name: Show logs for Odoo test container
-        run: docker logs odoo-test2
-
-
-
+        
